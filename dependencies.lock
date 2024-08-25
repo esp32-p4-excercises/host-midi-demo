@@ -1,0 +1,75 @@
+dependencies:
+  chmorgan/esp-audio-player:
+    component_hash: c8ac1998e9af863bc41b57e592f88d1a5791a0f891485122336ddabbf7a65033
+    source:
+      service_url: https://api.components.espressif.com/
+      type: service
+    version: 1.0.7
+  chmorgan/esp-file-iterator:
+    component_hash: 327091394b9ef5c2cd395a960ab70ae64479e0a8831cbd9925e38895fad93719
+    source:
+      service_url: https://api.components.espressif.com/
+      type: service
+    version: 1.0.0
+  chmorgan/esp-libhelix-mp3:
+    component_hash: cbb76089dc2c5749f7b470e2e70aedc44c9da519e04eb9a67d4c7ec275229e53
+    source:
+      service_url: https://api.components.espressif.com/
+      type: service
+    version: 1.0.3
+  espressif/cmake_utilities:
+    component_hash: 351350613ceafba240b761b4ea991e0f231ac7a9f59a9ee901f751bddc0bb18f
+    source:
+      service_url: https://api.components.espressif.com/
+      type: service
+    version: 0.5.3
+  espressif/esp_codec_dev:
+    component_hash: 251636a498fa3493ff2e6e7527d6b0970eb38e14b2a1478ce70ad627a791742e
+    source:
+      service_url: https://api.components.espressif.com/
+      type: service
+    version: 1.3.0
+  espressif/esp_lcd_ek79007:
+    component_hash: 7902d6fa8586bca600626eb366dc57702155626eabcc5d02454676e8cc78bf8b
+    source:
+      service_url: https://api.components.espressif.com/
+      type: service
+    version: 0.1.0
+  espressif/esp_lcd_ili9881c:
+    component_hash: 13869f4b132143a3181344af392d42e2f29124c2a1f4b45a7d9bcd47d213a1be
+    source:
+      service_url: https://api.components.espressif.com/
+      type: service
+    version: 0.2.0
+  espressif/esp_lcd_touch:
+    component_hash: 779b4ba2464a3ae85681e4b860caa5fdc35801458c23f3039ee761bae7f442a4
+    source:
+      service_url: https://api.components.espressif.com/
+      type: service
+    version: 1.1.2
+  espressif/esp_lcd_touch_ft5x06:
+    component_hash: 97759953d9436a365e9427078c5b04ecce4e6a50f50cf62c68cd6bfa229b812c
+    source:
+      service_url: https://api.components.espressif.com/
+      type: service
+    version: 1.0.6
+  espressif/esp_lcd_touch_gt911:
+    component_hash: 664c544533b91497f29b41e045bb4374a0d4d002f9d8c67c7c1bf43fb4179e3f
+    source:
+      service_url: https://api.components.espressif.com/
+      type: service
+    version: 1.1.1
+  idf:
+    component_hash: null
+    source:
+      type: idf
+    version: 5.4.0
+  lvgl/lvgl:
+    component_hash: 2a8f619b5c2b1c7ad116c33d43dae8989c76739068f406a7e8ba9221e1085f17
+    source:
+      service_url: https://api.components.espressif.com/
+      type: service
+    version: 9.1.0
+manifest_hash: 1b2522d4de6b31716b1429e8e00c46b5b21789f1c2136bbe5c1c0b36e8517b65
+target: esp32p4
+version: 1.0.0
