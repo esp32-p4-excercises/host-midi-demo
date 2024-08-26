@@ -25,7 +25,6 @@ namespace usb
         else
         {
             ESP_LOGI("USB_HOST_CLIENT_EVENT_DEV_GONE", "client event: %d", event_msg->event);
-            device->close();
             esp_event_post_to(usb::event_loop, USB_HOST_BASE_EVENT, USB_HOST_CLIENT_EVENT_DEV_GONE, device, 1, 10);
         }
     }
@@ -52,7 +51,7 @@ namespace usb
 
     void Device::release()
     {
-        // esp_err_t usb_host_interface_release(usb_host_client_handle_t client_hdl, usb_device_handle_t dev_hdl, uint8_t bInterfaceNumber);
+        usb_host_interface_release(client_hdl, dev_hdl, itf_num);
     }
 
 } // namespace usb

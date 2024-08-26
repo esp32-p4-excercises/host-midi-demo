@@ -97,8 +97,7 @@ namespace usb
         auto _len = usb_round_up_to_mps(len, ep_in->wMaxPacketSize);
         if (xSemaphoreTake(transfer_in, portMAX_DELAY))
         {
-            auto err = xferIn.submit(dev_hdl, _len);
-            ESP_ERROR_CHECK_WITHOUT_ABORT(err);
+            xferIn.submit(dev_hdl, _len);
         }
         if (xSemaphoreTake(transfer_in, 3000))
         {

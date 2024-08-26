@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <iostream>
 #include "string.h"
+#include <array>
 
 #include "freertos/FreeRTOS.h"
 #include "freertos/task.h"
@@ -14,6 +15,9 @@
 #include "usb_midi.h"
 #include "launchpad-mini-mk3.h"
 
+void open_session();
+void close_session();
+
 using namespace usb;
 static Host host;
 static Device device;
@@ -21,22 +25,23 @@ static Device device;
 MIDI *midi;
 
 static void host_event_handler(void *event_handler_arg, esp_event_base_t event_base, int32_t event_id, void *arg);
-void midi_event_handler(void *event_handler_arg, esp_event_base_t event_base, int32_t event_id, void *arg);
 void lvgl_open_midi();
 
 static bool ready = false;
 
 static void task(void *)
 {
+    auto buf = (uint8_t *)malloc(512);
     while (1)
     {
         if (ready)
         {
-            auto buf = (uint8_t*)malloc(512);
             auto len = midi->read(buf, 512);
-            if(len)
+            if (len)
             {
-                auto tpl = std::tuple<int, uint8_t*>(len, buf);
+                auto arr = std::array<uint8_t, 512>();
+                memcpy(arr.data(), buf, len);
+                auto tpl = std::tuple<int, std::array<uint8_t, 512>>(len, arr);
                 auto err = esp_event_post_to(usb::event_loop, USB_MIDI_BASE_EVENT, 0xffff, &tpl, sizeof(tpl), 0);
             }
         }
@@ -71,17 +76,34 @@ static void host_event_handler(void *event_handler_arg, esp_event_base_t event_b
         {
         case USB_HOST_CLIENT_EVENT_DEV_GONE:
         {
+            close_session();
             ready = false;
+            if (midi)
+            {
+                midi->release();
+                delete midi;
+            }
+            device.close();
             break;
         }
         case USB_HOST_CLIENT_EVENT_NEW_DEV:
         {
             midi = new MIDI(device);
             midi->claim();
-            vTaskDelay(10);
-            lvgl_open_midi();
-            ready = true;
-            xTaskCreate(task, "midi", 4000, NULL, 1, NULL);
+            if (midi->connected())
+            {
+                open_session();
+                vTaskDelay(10);
+                lvgl_open_midi();
+                ready = true;
+                xTaskCreate(task, "midi", 4000, NULL, 1, NULL);
+            }
+            else
+            {
+                midi->release();
+                delete midi;
+                midi = nullptr;
+            }
         }
         break;
         default:

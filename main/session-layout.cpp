@@ -1,4 +1,5 @@
 #include <map>
+#include <array>
 
 #include "esp_log.h"
 #include "esp_err.h"
@@ -20,6 +21,8 @@ void midi_event_btn(void *p);
 
 static lv_style_t style_btn1;
 static lv_style_t style_btn2;
+static lv_obj_t *main_scr = nullptr;
+static lv_obj_t *launchpad_scr = nullptr;
 
 extern usb::MIDI *midi;
 novation::Launchpad pad;
@@ -62,7 +65,7 @@ static void lv_example_grid(void)
     static int32_t row_dsc[] = {60, 60, 60, 60, 60, 60, 60, 60, LV_GRID_TEMPLATE_LAST};
 
     /*Create a container with grid*/
-    cont = lv_obj_create(lv_screen_active());
+    cont = lv_obj_create(launchpad_scr);
     lv_obj_set_style_grid_column_dsc_array(cont, col_dsc, 0);
     lv_obj_set_style_grid_row_dsc_array(cont, row_dsc, 0);
     lv_obj_set_size(cont, 1024, 600);
@@ -134,11 +137,15 @@ static void init_lvgl_style()
 
 static void _event_handler(void *event_handler_arg, esp_event_base_t event_base, int32_t event_id, void *arg)
 {
-    auto tpl = *(std::tuple<int, uint8_t *> *)arg;
+    auto tpl = *(std::tuple<int, std::array<uint8_t, 512>> *)arg;
     auto size = std::get<0>(tpl);
-    auto data = std::get<1>(tpl);
+    auto arr = std::get<1>(tpl);
+    auto data = arr.data();
     if (size > 512)
+    {
+        // free(data);
         return;
+    }
     for (size_t i = 0; i < size;)
     {
         auto cmd = data + i;
@@ -163,7 +170,11 @@ static void _event_handler(void *event_handler_arg, esp_event_base_t event_base,
 
         i += len;
     }
-    free(data);
+    // if (data)
+    // {
+    //     free(data);
+    //     data = nullptr;
+    // }
 }
 
 void lvgl_open_midi()
@@ -171,9 +182,28 @@ void lvgl_open_midi()
     dawMode.setMIDI(midi);
     esp_event_handler_instance_register_with(usb::event_loop, USB_MIDI_BASE_EVENT, 0xffff, _event_handler, NULL, NULL);
 }
-
 void open_session()
 {
+    lv_screen_load(launchpad_scr);
+}
+
+void close_session()
+{
+    lv_screen_load(main_scr);
+}
+#include "logo.h"
+void init_lvgl()
+{
+    main_scr = lv_obj_create(NULL);
+    launchpad_scr = lv_obj_create(NULL);
+
+    lv_obj_t * img;
+
+    img = lv_image_create(main_scr);
+    lv_image_set_src(img, &esp_logo);
+    lv_obj_center(img);
+    lv_screen_load(main_scr);
+
     init_lvgl_style();
 
     lv_example_grid();
@@ -227,7 +257,6 @@ void Button::onPadPress()
 
 void Button::onRelease()
 {
-
 }
 
 void midi_event_btn(void *arg)
@@ -292,7 +321,6 @@ void DAWbutton::onRelease()
 
 void DAWbutton::changeMode()
 {
-
 }
 
 void Faders::onPadPress()

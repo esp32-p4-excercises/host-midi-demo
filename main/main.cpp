@@ -10,7 +10,7 @@
 #include "bsp/display.h"
 #include "lvgl.h"
 
-void open_session();
+void init_lvgl();
 void init_midi_host(void);
 
 extern "C" void app_main(void)
@@ -20,8 +20,7 @@ extern "C" void app_main(void)
 
     bsp_display_lock(0);
 
-    open_session();
-
+    init_lvgl();
     bsp_display_unlock();
     init_midi_host();
 

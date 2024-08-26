@@ -10,11 +10,6 @@ At first i wanted to test P4 with my old USB host code. When it started working 
 For this code i dont provide support, since its just a demo, but i can try to answer some question. I decided to post it to show "cool" demo, not a functional code.
 
 
-# Issues
-
-This code does not recognize type of devices connected to USB port, so it will try to create midi class and crash if its not midi device.
-Also the code is crashing on device disconnect.
-
 
 # Links
 

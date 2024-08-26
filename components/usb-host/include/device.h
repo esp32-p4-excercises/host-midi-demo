@@ -31,14 +31,14 @@ namespace usb
         Endpoint0 *ep0;
         int address = 0;
         int bInterfaceClass = 0;
-        int bInterfaceSubClass = 01;
+        int bInterfaceSubClass = 0;
         int bInterfaceProtocol = 0;
         int itf_num = -1;
 
     public:
         Device() {};
         Device(Device &) = default;
-        ~Device() = default;
+        virtual ~Device() = default;
         static void _client_event_callback(const usb_host_client_event_msg_t *event_msg, void *arg);
 
         virtual void init(usb_host_client_handle_t hdl);
@@ -120,6 +120,14 @@ namespace usb
             const usb_config_desc_t *config_desc;
             usb_host_get_active_config_descriptor(dev_hdl, &config_desc);
             usb_print_config_descriptor(config_desc, print_class_descriptor);
+        }
+
+        bool connected()
+        {
+            auto itf = Interface();
+            itf.init(config_desc, client_hdl, dev_hdl, itf_num);
+            itf.parse();
+            return itf.Class() == bInterfaceClass and itf.Subclass() == bInterfaceSubClass and itf.Protocol() == bInterfaceProtocol;
         }
     };
 

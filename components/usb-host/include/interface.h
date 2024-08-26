@@ -57,8 +57,6 @@ namespace usb
             if(!descriptor) return -1;
             return descriptor->bInterfaceProtocol;
         }
-        virtual void findByType();
-        virtual void findNext();
 
     };
 } // namespace usb
